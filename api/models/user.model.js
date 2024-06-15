@@ -1,4 +1,3 @@
-import { Timestamp } from "firebase/firestore";
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
