@@ -1,7 +1,47 @@
-import React from 'react'
-import {Link} from 'react-router-dom'
+import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 
 export default function SignUp() {
+  const [formData, setFormData] = useState({});
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false)
+  const navigate = new useNavigate();
+
+  const handleChange = (e) =>{
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value,
+    });
+  };
+  // console.log(formData);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
+      const res = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+  
+      const data = await res.json();
+      if(data.success === false) {
+        setLoading(false);
+        setError(data.message);
+        return;
+      }
+      setLoading(false);
+      setError(null);
+      navigate('/sign-in')
+      console.log(data);
+    } catch (error) {
+      setLoading(false);
+    }
+  };
+
   return (
     <div class="font-[sans-serif] text-[#333] min-h-screen flex fle-col items-center justify-center py-6 px-4">
       <div class="grid md:grid-cols-2 items-center gap-10 max-w-6xl w-full">
@@ -10,8 +50,6 @@ export default function SignUp() {
             Everything You Need for Your Event and More!
           </h2>
           <p class="text-sm mt-6">From secure ticketing to insightful analytics, we provide seamless solutions and more to make your event a success.</p>
-
-
 
           <div class="space-y-10 mt-10">
           <div class="flex gap-4">
@@ -34,24 +72,17 @@ export default function SignUp() {
           </div>
         </div>
 
-
         <p class="text-sm mt-10">Already have an account <Link to={"/sign-in"}> <a href="javascript:void(0);" class="text-[#24a972] font-semibold hover:underline ml-1">Sign In here</a></Link></p>
-
-
-        </div>
-
-
-
-
+      </div>
         
-        <form class="bg-white md:max-w-lg md:ml-auto w-full">
+        <form onSubmit={handleSubmit} class="bg-white md:max-w-lg md:ml-auto w-full">
           <div class="mb-12">
             <h3 class="text-3xl font-extrabold">Sign Up</h3>
           </div>
           <div>
             <label class="text-sm block mb-2">Company Name</label>
             <div class="relative flex items-center">
-              <input name="name" type="text" required class="w-full bg-transparent text-sm border-b border-gray-300 focus:border-[#333] px-2 py-3 outline-none" placeholder="Enter Company Name" id='companyname' />
+              <input name="name" type="text" required class="w-full bg-transparent text-sm border-b border-gray-300 focus:border-[#333] px-2 py-3 outline-none" placeholder="Enter Company Name" id='companyname' onChange={handleChange}/>
               <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" class="w-[18px] h-[18px] absolute right-2" viewBox="0 0 24 24">
                 <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
                 <path d="M14 15H6a5 5 0 0 0-5 5 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 5 5 0 0 0-5-5zm8-4h-2.59l.3-.29a1 1 0 0 0-1.42-1.42l-2 2a1 1 0 0 0 0 1.42l2 2a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42l-.3-.29H22a1 1 0 0 0 0-2z" data-original="#000000"></path>
@@ -61,7 +92,7 @@ export default function SignUp() {
           <div class="mt-10">
             <label class="text-sm block mb-2">Email</label>
             <div class="relative flex items-center">
-              <input name="email" type="text" required class="w-full bg-transparent text-sm border-b border-gray-300 focus:border-[#333] px-2 py-3 outline-none" placeholder="Enter email" id='email'/>
+              <input name="email" type="text" required class="w-full bg-transparent text-sm border-b border-gray-300 focus:border-[#333] px-2 py-3 outline-none" placeholder="Enter email" id='email' onChange={handleChange}/>
               <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" class="w-[18px] h-[18px] absolute right-2" viewBox="0 0 682.667 682.667">
                 <defs>
                   <clipPath id="a" clipPathUnits="userSpaceOnUse">
@@ -78,24 +109,24 @@ export default function SignUp() {
           <div class="mt-10">
             <label class="text-sm block mb-2">Password</label>
             <div class="relative flex items-center">
-              <input name="password" type="password" required class="w-full bg-transparent text-sm border-b border-gray-300 focus:border-[#333] px-2 py-3 outline-none" placeholder="Enter password" id='password'/>
+              <input name="password" type="password" required class="w-full bg-transparent text-sm border-b border-gray-300 focus:border-[#333] px-2 py-3 outline-none" placeholder="Enter password" id='password' onChange={handleChange}/>
               <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" class="w-[18px] h-[18px] absolute right-2 cursor-pointer" viewBox="0 0 128 128">
                 <path d="M64 104C22.127 104 1.367 67.496.504 65.943a4 4 0 0 1 0-3.887C1.367 60.504 22.127 24 64 24s62.633 36.504 63.496 38.057a4 4 0 0 1 0 3.887C126.633 67.496 105.873 104 64 104zM8.707 63.994C13.465 71.205 32.146 96 64 96c31.955 0 50.553-24.775 55.293-31.994C114.535 56.795 95.854 32 64 32 32.045 32 13.447 56.775 8.707 63.994zM64 88c-13.234 0-24-10.766-24-24s10.766-24 24-24 24 10.766 24 24-10.766 24-24 24zm0-40c-8.822 0-16 7.178-16 16s7.178 16 16 16 16-7.178 16-16-7.178-16-16-16z" data-original="#000000"></path>
               </svg>
             </div>
           </div>
           <div class="flex items-center mt-8">
-            <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 shrink-0 rounded" />
+            <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 shrink-0 rounded"/>
             <label for="remember-me" class="ml-3 block text-sm">
               I accept the <a href="javascript:void(0);" class="text-[#24a972] font-semibold hover:underline ml-1">Terms and Conditions</a>
             </label>
           </div>
           <div class="mt-12 space-y-4">
-            <button type="button" class="w-full py-2.5 px-8 text-sm font-semibold rounded text-white bg-[#333] hover:bg-[#222] focus:outline-none transition-all">
-            Sign Up
+            <button disabled={loading} class="w-full py-2.5 px-8 text-sm font-semibold rounded text-white bg-[#333] hover:bg-[#222] focus:outline-none transition-all">
+            {loading ? 'Loading...' : 'Sign Up'}
             </button>
 
-            <button type="button"
+            {/* <button type="button"
               class="w-full py-2.5 px-8 flex items-center justify-center rounded text-[#333] text-base tracking-wider font-semibold border-none outline-none bg-gray-100 hover:bg-gray-200">
               <svg xmlns="http://www.w3.org/2000/svg" width="22px" fill="#fff" class="inline shrink-0 mr-4" viewBox="0 0 512 512">
                 <path fill="#fbbd00"
@@ -118,9 +149,10 @@ export default function SignUp() {
                   data-original="#eb4132" />
               </svg>
               Continue with Google
-            </button>
+            </button> */}
 
           </div>
+          {error && <p className='text-red-500 mt-5'>{error}</p>}
 
         </form>
       </div>
