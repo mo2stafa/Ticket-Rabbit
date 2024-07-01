@@ -125,7 +125,7 @@ export default function Profile() {
           {fileUplodeError ? <span className='text-red-700'>Error Image Upload</span> : filePerc > 0 && filePerc < 100 ? <span className='text-slate-700'>Uploading {filePerc}%</span> : filePerc === 100 ? <span className='text-green-700'>Image Successfully Uploaded</span> : ""}
         </p>
         
-        <input type='text' placeholder='Company Name' id='companyname' defaultValue={currentUser.companyname} onChange={handleChange} className='border rounded-lg p-3'></input>
+        <input type='text' placeholder='Organization Name' id='organizationName' defaultValue={currentUser.organizationName} onChange={handleChange} className='border rounded-lg p-3'></input>
         <input type='text' placeholder='Email' id='email' defaultValue={currentUser.email} onChange={handleChange} className='border rounded-lg p-3'></input>
         <input type='password' placeholder='Password' id='password' onChange={handleChange}  className='border rounded-lg p-3'></input>
 

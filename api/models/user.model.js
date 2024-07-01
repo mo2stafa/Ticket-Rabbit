@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-    companyname: {
+    organizationName: {
         type: String,
         required: true,
         unique: false, //change to false 
