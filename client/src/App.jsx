@@ -7,6 +7,7 @@ import About from './pages/About';
 import Profile from './pages/Profile';
 import Header from './components/Header';
 import PrivateRoute from './components/PrivateRoute';
+import CreateEvent from './pages/CreateEvent';
 
 export default function App() {
   return (
@@ -20,6 +21,10 @@ export default function App() {
       <Route element={<PrivateRoute/>}>
       <Route path='/profile' element={<Profile />} />
       </Route>
+      <Route element={<PrivateRoute/>}>
+      <Route path='/create-event' element={<CreateEvent />} />
+      </Route>
+
     </Routes>
   </BrowserRouter>
   );

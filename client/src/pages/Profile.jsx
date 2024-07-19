@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import { app } from '../firebase';
 import { updateUserStart, updateUserSuccess, updateUserFailure , deleteUserStart, deleteUserSuccess, deleteUserFailure, signOutStart, signOutSuccess, signOutFailure} from '../redux/user/userSlice';
-import { redirect } from 'react-router-dom';
+import { Link, redirect } from 'react-router-dom';
 
 export default function Profile() {
   const fileRef = useRef(null)
@@ -130,7 +130,8 @@ export default function Profile() {
         <input type='password' placeholder='Password' id='password' onChange={handleChange}  className='border rounded-lg p-3'></input>
 
         <button disabled={loading} className='w-full py-2.5 px-8 flex items-center justify-center rounded-lg text-white text-base tracking-wider font-semibold border-none outline-none bg-blue-500 hover:bg-blue-600'>{loading ? "loading..." : "Update"}</button>
-        <button className='w-full py-2.5 px-8 flex items-center justify-center rounded-lg text-white text-base tracking-wider font-semibold border-none outline-none bg-[#00bf6f] hover:bg-[#009b5b]'>Add Event</button>
+        {/* <button className='w-full py-2.5 px-8 flex items-center justify-center rounded-lg text-white text-base tracking-wider font-semibold border-none outline-none bg-[#00bf6f] hover:bg-[#009b5b]'>Add Event</button> */}
+        <Link className='w-full py-2.5 px-8 flex items-center justify-center rounded-lg text-white text-base tracking-wider font-semibold border-none outline-none bg-[#00bf6f] hover:bg-[#009b5b]' to={"/create-event"}>Create Event</Link>
       </form>
       <div className='flex justify-between mt-5'>
         <span onClick={handleDelete} className='text-red-700 cursor-pointer'>Delete Account</span>
