@@ -13,6 +13,8 @@ export default function Profile() {
   const [fileUplodeError,setFileUplodeError] = useState(false)
   const [formData, setFormData] = useState({});
   const [updateSuccess, setUpdateSuccess] = useState(false);
+  const [showEventsError, setShowEventsError] = useState(false);
+  const [userEvents, setUserEvents] = useState([]);
   const dispatch = useDispatch();
 
   
@@ -115,6 +117,24 @@ export default function Profile() {
   }
 
 
+  const handleShowEvents = async () => {
+    try{
+      setShowEventsError(false);
+      const res = await fetch(`/api/user/events/${currentUser._id}`);
+      const data = await res.json();
+      if(data.success === false) {
+        setShowEventsError(true);
+        return;
+      }
+
+      setUserEvents(data);
+    }
+    catch (error) {
+      setShowEventsError(true);
+    }
+  }
+
+
   return (
     <div className='p-3 max-w-lg mx-auto'>
       <h1 className='text-3xl font-semibold text-center my-7'>Profile</h1>
@@ -144,6 +164,35 @@ export default function Profile() {
       <p className='text-green-700 mt-5'>
         {updateSuccess ? "Profile Updated Successfully" : ""}
       </p>
+      <button onClick={handleShowEvents} className='w-full text-green-700' >Show Events</button>
+      <p className='text-red-700 mt-5'>{showEventsError ? "Something went wrong" : ""}</p>
+      
+      
+      {userEvents && userEvents.length > 0 && (
+        <div className='flex flex-col gap-3 mt-5'>
+          <h1 className='text-2xl my-7 font-semibold text-center'>Your Events</h1>
+          {userEvents.map((event) => (
+            <div key={event._id} className='border rounded-lg p-3 flex justify-between items-center gap-4'>
+              <Link to={`/event/${event._id}`}>
+                <img src={event.imageUrls[0]} alt="Event cover" className="w-16 h-16 object-contain rounded-lg"></img>
+              </Link>
+
+              <Link className='text-slate-700c font-semibold hover:underline truncate flex-1 ' to={`/event/${event._id}`}>
+                <p>{event.title}</p>
+              </Link>
+
+              <div className='flex flex-col items-center'>
+                <button className='text-red-500 uppercase'>Delete</button>
+                <button className='text-green-500 uppercase'>Edit</button>
+
+              </div>
+
+
+
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
