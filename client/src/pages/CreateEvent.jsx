@@ -1,15 +1,30 @@
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import React, { useState } from 'react'
 import { app } from '../firebase';
+import {useSelector} from 'react-redux'
+import { useNavigate } from 'react-router-dom';
 
 export default function CreateEvent() {
 
+  const {currentUser} = useSelector(state => state.user)
+  const navigate = useNavigate();
   const [files, setFiles] = useState([]);
   const [formData, setFormData] = useState({
+    title: '',
+    category: '',
+    description: '',
+    date: '',
+    time: '',
+    venue: '',
+    capacity: '1',
+    price: '0',
+    visibility: 'public',
     imageUrls: [],
   });
   const [imageUploadError, setImageUploadError] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   console.log(formData);
 
@@ -75,27 +90,80 @@ export default function CreateEvent() {
   };
 
 
+  const handleChange = (e) => {
+    if (e.target.type === 'radio') {
+      setFormData({
+        ...formData,
+        visibility: e.target.value,
+      })
+    };
+
+    if (e.target.type === 'number' || e.target.type === 'text' || e.target.type === 'date' || e.target.type === 'time' || e.target.type === 'textarea') {
+      setFormData({
+        ...formData,
+        [e.target.id]: e.target.value,
+      });
+    }
+    
+  };
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (formData.imageUrls.length < 1) {
+        setError('Please select at least one image');
+        return;
+      }
+      setLoading(true);
+      setError(false);
+
+      const res = await fetch('/api/event/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          creator: currentUser._id,
+        }),
+      });
+
+      const data = await res.json();
+      setLoading(false);
+      if (data.success === false) {
+        setError(data.message);
+      }
+
+      navigate(`/event/${data._id}`);
+
+    } catch (error) {
+      setError(error.message);
+      setLoading(false);
+    }
+  };
+
   return (
     <main className='p-3 max-w-4xl mx-auto'>
       <h1 className='text-3xl font-semibold text-center my-7'>Create Event</h1>
 
-      <form className='flex flex-col sm:flex-row gap-4'>
+      <form onSubmit={handleSubmit} className='flex flex-col sm:flex-row gap-4'>
         <div className='flex flex-col gap-4 flex-1'>
-          <input type="text" placeholder="title" className="border p-3 rounded-lg" id='title' maxLength={62} minLength={10} required/>  
-          <textarea type="text" placeholder="description" className="border p-3 rounded-lg" id='description' required/>
+          <input onChange={handleChange} value={formData.title} type="text" placeholder="title" className="border p-3 rounded-lg" id='title' maxLength={62} minLength={10} required/>  
+          <textarea onChange={handleChange} value={formData.description} type="text" placeholder="description" className="border p-3 rounded-lg" id='description' required/>
           
-          <input type="text" placeholder="category" className="border p-3 rounded-lg" id='category' required/>
-          <input type="date" placeholder="date" className="border p-3 rounded-lg" id='date' required/>
-          <input type="time" placeholder="time" className="border p-3 rounded-lg" id='time' required/>
-          <input type="text" placeholder="venue" className="border p-3 rounded-lg" id='venue' required/>
+          <input onChange={handleChange} value={formData.category} type="text" placeholder="category" className="border p-3 rounded-lg" id='category' required/>
+          <input onChange={handleChange} value={formData.date} type="date" placeholder="date" className="border p-3 rounded-lg" id='date' required/>
+          <input onChange={handleChange} value={formData.time} type="time" placeholder="time" className="border p-3 rounded-lg" id='time' required/>
+          <input onChange={handleChange} value={formData.venue} type="text" placeholder="venue" className="border p-3 rounded-lg" id='venue' required/>
           
           <div className='flex gap-10 flex-wrap py-3'>
             <div className='flex items-center gap-2'>
-              <input type="number" placeholder="capacity" className="border p-3 rounded-lg" id='capacity' min={1} required/>
+              <input onChange={handleChange} value={formData.capacity} type="number" placeholder="capacity" className="border p-3 rounded-lg" id='capacity' min={1} required/>
               <p>Capacity</p>
             </div>
             <div className='flex items-center gap-2'>
-              <input type="number" placeholder="price" className="border p-3 rounded-lg" id='price' min={1} required/>
+              <input onChange={handleChange} value={formData.price} type="number" placeholder="price" className="border p-3 rounded-lg" id='price' min={0} required/>
               <div className='flex flex-col items-center'>
                 <p>Price</p>  
                 <span className='text-xs'>($ / ticket)</span>
@@ -108,12 +176,12 @@ export default function CreateEvent() {
           <div className='flex gap-10 flex-wrap py-3'>
             <h3>Select Event Visibility</h3>
             <div className='flex gap-2'>
-                <input type='radio' id='public' name='visibility' value='public' className='w-5' required/>
+                <input onChange={handleChange} checked={formData.visibility === 'public'} type='radio' id='public' name='visibility' value='public' className='w-5' required/>
                 <span className='ml-2'>Public</span>         
             </div>
 
             <div className='flex gap-2'>
-                <input type='radio' id='private' name='visibility' value='private' className='w-5' required/>
+                <input onChange={handleChange} checked={formData.visibility === 'private'} type='radio' id='private' name='visibility' value='private' className='w-5' required/>
                 <span className='ml-2'>Private</span>         
             </div>
 
@@ -141,10 +209,10 @@ export default function CreateEvent() {
           ))
         }
 
+        <button disabled={loading || uploading} className='p-3 bg-slate-700 text-white rounded-lg Uppercase hover:opacity-95 disabled:opacity-80 my-3'>{loading?'Creating...':'Create Event'}</button>
+        <p className='text-red-500 text-sm'>{error && error}</p>
 
-        <button className='p-3 bg-slate-700 text-white rounded-lg Uppercase hover:opacity-95 disabled:opacity-80 my-3'>Create Event</button>
-       </div> 
-
+       </div>
 
       </form>
     </main>

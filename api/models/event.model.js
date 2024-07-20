@@ -58,19 +58,19 @@ const eventSchema = new mongoose.Schema({
     // registrationDeadline: {
     //     type: Date,
     // },
-    attendees: [
-        {
-          name: {
-            type: String,
-            required: true,
-          },
-          email: {
-            type: String,
-            required: true,
-            unique: true,
-          },
-        },
-      ],
+    // attendees: [
+    //     {
+    //       name: {
+    //         type: String,
+    //         required: true,
+    //       },
+    //       email: {
+    //         type: String,
+    //         required: true,
+    //         unique: true,
+    //       },
+    //     },
+    //   ],
     
     
 }, {timestamps: true});
