@@ -42,9 +42,9 @@ const eventSchema = new mongoose.Schema({
         required: true,
         enum: ['public', 'private'],
     },
-    image: {
-        type: String,
-        default: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjtNBgCacCwHhxVPj1ubPRygdT7X_7w_UrLQ&s",
+    imageUrls: {
+        type: Array,
+        required: true,
     },
 
     creator: {
