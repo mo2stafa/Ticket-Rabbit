@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import bcryptjs from "bcryptjs"
 import { errorHandler } from "../utils/error.js";
+import Event from "../models/event.model.js";
 
 export const test = (req, res) => {
     res.send('hello world!');
@@ -47,3 +48,15 @@ export const deleteUser = async (req, res, next) => {
         next(error);
     }  
 };
+
+export const getUserEvents = async (req, res, next) => {
+    if (req.user.id !== req.params.id) {
+        return next(errorHandler(403, 'You can get only your events!'));
+    }
+    try {
+        const events = await Event.find({ creator: req.params.id });
+        res.status(200).json(events);
+    } catch (error) {
+        next(error);
+    }
+}
