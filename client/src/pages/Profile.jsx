@@ -202,8 +202,9 @@ export default function Profile() {
 
               <div className='flex flex-col items-center'>
                 <button onClick={() => handleDeleteEvent(event._id)} className='text-red-500 uppercase'>Delete</button>
-                <button className='text-green-500 uppercase'>Edit</button>
-
+                <Link to={`/update-event/${event._id}`}>
+                  <button className='text-green-500 uppercase'>Edit</button>
+                </Link>
               </div>
 
 

@@ -1,13 +1,14 @@
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { app } from '../firebase';
 import {useSelector} from 'react-redux'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
-export default function CreateEvent() {
+export default function UpdateEvent() {
 
   const {currentUser} = useSelector(state => state.user)
   const navigate = useNavigate();
+  const params = useParams();
   const [files, setFiles] = useState([]);
   const [formData, setFormData] = useState({
     title: '',
@@ -25,6 +26,34 @@ export default function CreateEvent() {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
+
+
+
+  useEffect(() => {
+      const fetchEvent = async () => {
+        const eventId = params.eventId;
+        const res = await fetch(`/api/event/get/${eventId}`);
+        const data = await res.json();
+        data.date = formatDate(data.date);
+
+        setFormData(data);
+        if(data.success === false) {
+          console.log(data.message);
+          return;
+        }  
+      }
+
+      fetchEvent();
+  }, []);
+
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+};
 
 
   const handleImageUpload = (e) => {
@@ -117,7 +146,7 @@ export default function CreateEvent() {
       setLoading(true);
       setError(false);
 
-      const res = await fetch('/api/event/create', {
+      const res = await fetch(`/api/event/update/${params.eventId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -144,7 +173,7 @@ export default function CreateEvent() {
 
   return (
     <main className='p-3 max-w-4xl mx-auto'>
-      <h1 className='text-3xl font-semibold text-center my-7'>Create Event</h1>
+      <h1 className='text-3xl font-semibold text-center my-7'>Update Event</h1>
 
       <form onSubmit={handleSubmit} className='flex flex-col sm:flex-row gap-4'>
         <div className='flex flex-col gap-4 flex-1'>
@@ -208,7 +237,7 @@ export default function CreateEvent() {
           ))
         }
 
-        <button disabled={loading || uploading} className='p-3 bg-slate-700 text-white rounded-lg Uppercase hover:opacity-95 disabled:opacity-80 my-3'>{loading?'Creating...':'Create Event'}</button>
+        <button disabled={loading || uploading} className='p-3 bg-slate-700 text-white rounded-lg Uppercase hover:opacity-95 disabled:opacity-80 my-3'>{loading?'updating...':'Update Event'}</button>
         <p className='text-red-500 text-sm'>{error && error}</p>
 
        </div>
