@@ -9,6 +9,7 @@ import Header from './components/Header';
 import PrivateRoute from './components/PrivateRoute';
 import CreateEvent from './pages/CreateEvent';
 import UpdateEvent from './pages/UpdateEvent';
+import Event from './pages/Event';
 
 export default function App() {
   return (
@@ -19,6 +20,8 @@ export default function App() {
       <Route path='/sign-in' element={<SignIn />} />
       <Route path='/sign-up' element={<SignUp />} />
       <Route path='/about' element={<About />} />
+      <Route path='/event/:eventId' element={<Event />} />
+
       <Route element={<PrivateRoute/>}>
         <Route path='/profile' element={<Profile />} />
         <Route path='/create-event' element={<CreateEvent />} />

@@ -34,13 +34,14 @@ export default function UpdateEvent() {
         const eventId = params.eventId;
         const res = await fetch(`/api/event/get/${eventId}`);
         const data = await res.json();
-        data.date = formatDate(data.date);
-
-        setFormData(data);
+        
         if(data.success === false) {
           console.log(data.message);
           return;
         }  
+
+        data.date = formatDate(data.date);
+        setFormData(data);
       }
 
       fetchEvent();
