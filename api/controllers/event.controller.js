@@ -8,3 +8,24 @@ export const createEvent = async (req, res, next) => {
     }
 
 };
+
+
+
+export const deleteEvent = async (req, res, next) => {
+    const event = await Event.findById(req.params.id);
+
+    if (!event) {
+        return next(errorHandler(404, 'Event not found!'));
+    }
+
+    if (event.creator !== req.user.id) {
+        return next(errorHandler(403, 'You can delete only your events!'));
+    }
+
+    try{
+        await Event.findByIdAndDelete(req.params.id);
+        res.status(200).json('Event has been deleted!');
+    } catch (error) {
+        next(error);
+    }
+}

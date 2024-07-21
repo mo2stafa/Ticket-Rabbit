@@ -149,7 +149,7 @@ export default function CreateEvent() {
 
       <form onSubmit={handleSubmit} className='flex flex-col sm:flex-row gap-4'>
         <div className='flex flex-col gap-4 flex-1'>
-          <input onChange={handleChange} value={formData.title} type="text" placeholder="title" className="border p-3 rounded-lg" id='title' maxLength={62} minLength={10} required/>  
+          <input onChange={handleChange} value={formData.title} type="text" placeholder="title" className="border p-3 rounded-lg" id='title' maxLength={100} required/>  
           <textarea onChange={handleChange} value={formData.description} type="text" placeholder="description" className="border p-3 rounded-lg" id='description' required/>
           
           <input onChange={handleChange} value={formData.category} type="text" placeholder="category" className="border p-3 rounded-lg" id='category' required/>

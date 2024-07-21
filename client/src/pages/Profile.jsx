@@ -135,6 +135,25 @@ export default function Profile() {
   }
 
 
+
+  const handleDeleteEvent = async (id) => {
+    try{
+      const res = await fetch(`/api/event/delete/${id}`, {
+        method: 'DELETE',
+      });
+  
+      const data = await res.json();
+      if(data.success === false) {
+        console.log(data.message);
+        return;
+      }
+      setUserEvents(userEvents.filter((event) => event._id !== id));
+    }
+    catch (error) {
+      console.log(error.message);
+    }
+  }
+
   return (
     <div className='p-3 max-w-lg mx-auto'>
       <h1 className='text-3xl font-semibold text-center my-7'>Profile</h1>
@@ -182,7 +201,7 @@ export default function Profile() {
               </Link>
 
               <div className='flex flex-col items-center'>
-                <button className='text-red-500 uppercase'>Delete</button>
+                <button onClick={() => handleDeleteEvent(event._id)} className='text-red-500 uppercase'>Delete</button>
                 <button className='text-green-500 uppercase'>Edit</button>
 
               </div>
