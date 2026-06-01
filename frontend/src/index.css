@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+:root {
+  color: #0f172a;
+  background-color: #f8fafc;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+main.app {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 64px 24px;
+}
+
+.hero {
+  max-width: 680px;
+  background: #fff;
+  padding: 48px;
+  border-radius: 16px;
+  box-shadow: 0 15px 50px rgba(15, 23, 42, 0.08);
+  border: 1px solid #e2e8f0;
+}
+
+.eyebrow {
+  margin: 0 0 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+  font-size: 12px;
+  color: #3b82f6;
+}
+
+h1 {
+  margin: 0 0 12px;
+  font-size: 32px;
+  line-height: 1.2;
+}
+
+.lede {
+  margin: 0 0 24px;
+  color: #475569;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.cta-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.button {
+  text-decoration: none;
+  padding: 12px 18px;
+  border-radius: 10px;
+  background: #0f172a;
+  color: #fff;
+  font-weight: 700;
+}
+
+.link {
+  text-decoration: none;
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.link:hover {
+  text-decoration: underline;
+}

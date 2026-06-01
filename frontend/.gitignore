@@ -22,19 +22,3 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-.env
-
-# Python
-__pycache__/
-*.pyc
-venv/
-.env
-
-# Dependencies
-node_modules
-/node_modules
-
-# Env files
-.env
-.env.local
-.env.*
